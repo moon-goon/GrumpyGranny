@@ -1,6 +1,21 @@
+require ('main')
+
+local anim8 = require 'lib/anim8'
 
 player = {}
- 
+p_img = love.graphics.newImage("assets/GrannySprites/Stand1.png")
+playerUp = love.graphics.newImage("assets/GrannySprites2/RightAirUp1.png")
+playerDown = love.graphics.newImage("assets/GrannySprites2/RightAirDown1.png")
+
+playerR = love.graphics.newImage("assets/sprites/GrannyWalkRight.png")
+r = anim8.newGrid(64,64,playerR:getWidth(),playerR:getHeight())
+animR = anim8.newAnimation(r('1-8',1),0.1)
+playerL = love.graphics.newImage("assets/sprites/GrannyWalkLeft.png")
+l = anim8.newGrid(64,64,playerR:getWidth(),playerR:getHeight())
+animL = anim8.newAnimation(r('1-8',1),0.1)
+
+
+playerState = "idle"
 function player:new()
   local object = {
   x = 0,
@@ -39,6 +54,8 @@ end
 function player:moveRight()
   if self.xSpeed < self.xSpeedMax then self.xSpeed = self.xSpeed + self.accelaration end
   self.decelarating = false;
+
+
 end
  
 function player:moveLeft()
@@ -127,7 +144,7 @@ end
  
 -- Update function
   function player:update(dt, gravity) 
-  
+  animR:update(dt)
   -- Left and right ray blocks
   if self.collidedRight == true and self.x + (self.xSpeed * dt) > self.collidedRightWall then self.xSpeed = 0 end
   if self.collidedLeft == true and self.x + (self.xSpeed * dt) < self.collidedLeftWall then self.xSpeed = 0 end
@@ -153,23 +170,54 @@ end
   self:updateState()
 end
 
-function player:draw()
-  g.rectangle("fill", self.x, self.y, self.width, self.height)
-  if debug then
-    g.setColor(255,255,0)
-    g.line(self:getRightEdge(), self.y - self.height, self:getRightEdge(), self.y + self.height * 2)
-    g.line(self:getLeftEdge(), self.y - self.height, self:getLeftEdge(), self.y + self.height * 2)
-    g.line(self.x - self.width, self:getTopEdge(), self.x + self.width * 2, self:getTopEdge())
-    g.line(self.x - self.width, self:getBottomEdge(), self.x + self.width * 2, self:getBottomEdge())
+function player:draw(x,y,width,height)
+
+   g.setColor(255,255,255,255)
+
+  if (self.canJump) then
+    g.draw(p_img, self.x, self.y,0,1,1, p_img:getWidth()/2,p_img:getHeight()/2-32)
   end
+
+ if not (self.canJump) then
+    g.draw(playerUp, self.x, self.y,0,1,1, p_img:getWidth()/2,p_img:getHeight()/2-32)  
+ end
+
+ -- g.draw(p_img, self.x, self.y,0,1,1, p_img:getWidth()/2,p_img:getHeight()/2-32)
+  
+    if love.keyboard.isDown("right") then
+      --  animR:draw(playerR,self.x, self.y,0,1,1, p_img:getWidth()/2,p_img:getHeight()/2-32)
+
+      end
+    if love.keyboard.isDown("left") then
+      --  animR:draw(playerL,self.x, self.y,0,1,1, p_img:getWidth()/2,p_img:getHeight()/2-32)
+      end
+
+      if self.ySpeed > 0 then
+          self.state = "fall"
+         g.draw(playerDown, self.x, self.y,0,1,1, p_img:getWidth()/2,p_img:getHeight()/2-32)
+     end
+       if self.xSpeed > 0 then
+        self.state = "moveRight"
+        animR:draw(playerR,self.x, self.y,0,1,1, p_img:getWidth()/2,p_img:getHeight()/2-32)
+    elseif self.xSpeed < 0 then
+        self.state = "moveLeft"
+        animR:draw(playerL,self.x, self.y,0,1,1, p_img:getWidth()/2,p_img:getHeight()/2-32)
+    else 
+      self.state = "stand"
+    end
+ 
 end
 
+
 function player:updateState()
+
   if not(self.canJump) then
     if self.ySpeed < 0 then
       self.state = "jump"
+      sound_play(jump)
     elseif self.ySpeed > 0 then
       self.state = "fall"
+      sound_play(falling)
     end
   else
     if self.xSpeed > 0 then

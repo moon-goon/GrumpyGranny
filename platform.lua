@@ -22,15 +22,9 @@ function platform:new(x, y, width, height)
 end
 
 function platform:draw()
-  g.rectangle("fill", self.x, self.y, self.width, self.height)
-  if debug then
-    g.setColor(255,255,0)
-    g.line(self:getRightEdge(), self.y - self.height, self:getRightEdge(), self.y + self.height * 2)
-    g.line(self:getLeftEdge(), self.y - self.height, self:getLeftEdge(), self.y + self.height * 2)
-    g.line(self.x - self.width, self:getTopEdge(), self.x + self.width * 2, self:getTopEdge())
-    g.line(self.x - self.width, self:getBottomEdge(), self.x + self.width * 2, self:getBottomEdge())
-    g.setColor(groundColor)
-  end
+
+  g.draw(img, self.x, self.y,0,1,1, self.width-96, self.height/2)
+
 end
 
 function platform:getRightEdge() 
