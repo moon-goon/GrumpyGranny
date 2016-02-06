@@ -1,8 +1,7 @@
 # GrumpyGranny
-<h3>A simple platformer game that were made during 48 hours gamejam at NSCC Truro campus</h3>
-<ul>Skills used
-<li>Lua / Love2D / BOX2D / Photoshop </li>
-</ul>
+<p>A simple platformer game that were made during 48 hours gamejam at NSCC Truro campus</p>
+
+<li><strong>Skills Used: </strong>Lua / Love2D / BOX2D / Photoshop </li>
 
 <img src="https://www.dropbox.com/s/lik1xlgp7w59bts/grannySplash.png?dl=1" width="400" height="600">
 
